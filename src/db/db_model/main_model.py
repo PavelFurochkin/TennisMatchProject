@@ -7,7 +7,7 @@ class Base(DeclarativeBase):
 
 
 class Player(Base):
-    __table__ = "players"
+    __tablename__ = "players"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(100), index=True, unique=True)
@@ -19,13 +19,13 @@ class Player(Base):
 
 
 class Match(Base):
-    __table__ = "matches"
+    __tablename__ = "matches"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     uuid: Mapped[str] = mapped_column(unique=True)
-    player1: Mapped[int] = mapped_column(ForeignKey("players.id"), ondelete="CASCADE")
-    player2: Mapped[int] = mapped_column(ForeignKey("players.id"), ondelete="CASCADE")
-    winner: Mapped[int] = mapped_column(ForeignKey("players.id"), ondelete="CASCADE")
+    player1: Mapped[int] = mapped_column(ForeignKey("players.id", ondelete="CASCADE"))
+    player2: Mapped[int] = mapped_column(ForeignKey("players.id", ondelete="CASCADE"))
+    winner: Mapped[int] = mapped_column(ForeignKey("players.id", ondelete="CASCADE"))
     score: Mapped[str] = mapped_column(String(500))
 
 
