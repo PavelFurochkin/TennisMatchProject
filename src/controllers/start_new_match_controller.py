@@ -19,7 +19,7 @@ class NewMatchController(BaseController):
             return
         self.db_service.add_match(player1, player2)
         self.response.status = '303 See Other'
-        self.response.headers = [('Location', '/match-score?uuid=$match_id')]
+        self.response.headers = [('Location', f'/match-score?uuid={match.id}')]
 
     def __parse_data_from_request(self):
         request_data = self.environ['wsgi.input'].read().decode('utf-8')
