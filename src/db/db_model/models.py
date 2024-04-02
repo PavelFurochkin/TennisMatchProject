@@ -25,8 +25,8 @@ class Match(Base):
     uuid: Mapped[str] = mapped_column(unique=True)
     player1: Mapped[int] = mapped_column(ForeignKey("players.id", ondelete="CASCADE"))
     player2: Mapped[int] = mapped_column(ForeignKey("players.id", ondelete="CASCADE"))
-    winner: Mapped[int] = mapped_column(ForeignKey("players.id", ondelete="CASCADE"))
-    score: Mapped[str] = mapped_column(String(500))
+    winner: Mapped[int] = mapped_column(ForeignKey("players.id", ondelete="CASCADE"), nullable=True)
+    score: Mapped[str] = mapped_column(String(500), nullable=True)
 
 
  
