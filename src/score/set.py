@@ -41,19 +41,21 @@ class Set:
         if max_won_points >= min_points_to_win and points_diff >= 2:
             return True
         return False
+
     def _determine_winner(self):
         if self.p1_points > self.p2_points:
             self.winner = 1
         else:
             self.winner = 2
 
-    class SetSchema(Schema):
-        p1_points = fields.Int(required=True)
-        p2_points = fields.Int(required=True)
-        need_tie = fields.Bool(required=True)
-        is_over = fields.Bool(required=True)
-        winner = fields.Int(required=True, allow_none=True)
 
-        @post_load
-        def make_object(self, data, **kwargs):
-            return Set(**data)
+class SetSchema(Schema):
+    p1_points = fields.Int(required=True)
+    p2_points = fields.Int(required=True)
+    need_tie = fields.Bool(required=True)
+    is_over = fields.Bool(required=True)
+    winner = fields.Int(required=True, allow_none=True)
+
+    @post_load
+    def make_object(self, data, **kwargs):
+        return Set(**data)

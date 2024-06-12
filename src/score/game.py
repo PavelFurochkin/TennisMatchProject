@@ -30,7 +30,7 @@ class Game:
             min_points_to_win = 4
         max_won_points = max(self.p2_points, self.p1_points)
         point_diff = max_won_points - min(self.p2_points, self.p1_points)
-        if max_won_points >= min_points_to_win and point_diff >=2:
+        if max_won_points >= min_points_to_win and point_diff >= 2:
             return True
         return False
 
@@ -40,13 +40,14 @@ class Game:
         else:
             self.winner = 2
 
-    class GameSchema(Schema):
-        p1_points = fields.Int(required=True)
-        p2_points = fields.Int(required=True)
-        is_tie = fields.Bool(required=True)
-        is_over = fields.Bool(required=True)
-        winner = fields.Int(required=True, allow_none=True)
 
-        @post_load
-        def make_object(self, data, **kwargs):
-            return Game(**data)
+class GameSchema(Schema):
+    p1_points = fields.Int(required=True)
+    p2_points = fields.Int(required=True)
+    is_tie = fields.Bool(required=True)
+    is_over = fields.Bool(required=True)
+    winner = fields.Int(required=True, allow_none=True)
+
+    @post_load
+    def make_object(self, data, **kwargs):
+        return Game(**data)
