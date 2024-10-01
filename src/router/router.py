@@ -1,10 +1,11 @@
 from src.controllers.start_new_match_controller import NewMatchController
 from src.controllers.match_score_controller import MatchScoreController
+from src.controllers.index_controller import IndexPageController
 
 
 class Router:
     routes = {
-        # '/': index_page_controller,
+        '/': IndexPageController,
         '/new-match': NewMatchController,
         '/match-score': MatchScoreController,
         # '/matches': matches_controller
@@ -12,5 +13,5 @@ class Router:
 
     @classmethod
     def choose_controller(cls, path):
-        final_controller = cls.routes.get(path, NewMatchController)
+        final_controller = cls.routes.get(path, IndexPageController)
         return final_controller

@@ -4,7 +4,7 @@ from View.templates.game_score_convector import GameScoreConvector
 
 class Render:
     templates = {
-        # 'index': 'index.html',
+        'index': 'index.html',
         'new_match': 'new_match.html',
         'match_score': 'match_score.html',
         'match_not_found': 'match_not_found.html',

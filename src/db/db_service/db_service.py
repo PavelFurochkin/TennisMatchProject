@@ -1,12 +1,13 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from src.db.db_model.models import Base, Player, Match
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, or_
 from src.uuid_generator import UUIDGenerator
 from exceptions import MatchNotFoundByUUID
+from src.score.score import Score
 
 engine = create_engine('sqlite+pysqlite:///src/db/tennis_db.db')
-session_factory = sessionmaker(engine)
+session_factory = sessionmaker(bind=engine)
 
 
 class TennisDBService:
@@ -36,19 +37,18 @@ class TennisDBService:
         with session_factory() as session:
             TennisDBService.add_player(player1)
             TennisDBService.add_player(player2)
-            player1_in_game = session.query(Match).filter(
+            player1_in_game = session.query(Match.uuid).filter(
                 and_(
-                    TennisDBService.get_player_id_by_name(player1) == player1 or
-                    TennisDBService.get_player_id_by_name(player2) == player1,
-                    Match.winner is None
-                )
-            )
+                    Match.player1 == TennisDBService.get_player_id_by_name(player1) or
+                    Match.player2 == TennisDBService.get_player_id_by_name(player2),
+                    Match.winner == None
+            ))
             player1_available = session.scalars(player1_in_game).first()
-            player2_in_game = session.query(Match).filter(
+            player2_in_game = session.query(Match.uuid).filter(
                 and_(
-                    TennisDBService.get_player_id_by_name(player1) == player2 or
-                    TennisDBService.get_player_id_by_name(player2) == player2,
-                    Match.winner is None
+                    Match.player1 == TennisDBService.get_player_id_by_name(player1) or
+                    Match.player2 == TennisDBService.get_player_id_by_name(player2),
+                    Match.winner == None
                 )
             )
             player2_available = session.scalars(player2_in_game).first()
@@ -67,17 +67,19 @@ class TennisDBService:
         __new_uuid = UUIDGenerator.get_uuid()
         _first_player = TennisDBService.get_player_id_by_name(player1)
         _second_player = TennisDBService.get_player_id_by_name(player2)
+        _score = Score().serialize()
         with session_factory() as session:
-            match = Match(uuid=__new_uuid, player1=_first_player, player2=_second_player)
+            match = Match(uuid=__new_uuid, player1=_first_player, player2=_second_player, score=_score)
             session.add(match)
             session.commit()
+        return __new_uuid
 
     @classmethod
     def get_match_by_uuid(cls, uuid):
         with session_factory() as session:
             try:
                 match = select(Match).where(Match.uuid == uuid)
-                result = session.scalars(match).first()
+                result = session.execute(match).fetchone()[0]
                 return result
             except TypeError:
                 raise MatchNotFoundByUUID("Match not found")

@@ -5,13 +5,13 @@
     <title>Страница нового матча</title>
 </head>
 <body>
-    <form method="post" action="http://localhost:8080/new-match">
+    <form method="post" action="http://localhost:8000/new-match">
         <div>
             <label for="player1">Введите имя первого игрока</label>
-            <input type="text" required id="player1" placeholder="Ben Shelton">
+            <input type="text" name="player1" required id="player1" placeholder="Ben Shelton">
 
             <label for="player2">Введите имя второго игрока</label>
-            <input type="text" required id="player2" placeholder="Rafael Nadal">
+            <input type="text" name="player2" required id="player2" placeholder="Rafael Nadal">
         </div>
         <div>
             <button type="submit">Начать матч</button>
