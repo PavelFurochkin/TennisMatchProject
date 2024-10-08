@@ -8,7 +8,7 @@ class Render:
         'new_match': 'new_match.html',
         'match_score': 'match_score.html',
         'match_not_found': 'match_not_found.html',
-        # 'busy_player': 'busy_is_player.html',
+        'busy_player': 'busy_is_player.html',
         # 'matches': 'matches.html',
     }
 

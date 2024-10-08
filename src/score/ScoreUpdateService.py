@@ -34,7 +34,7 @@ class ScoreUpdateService:
             if not score.match_is_over:
                 if current_set.is_over:
                     score.sets.append(Set())
-                if current_set.needs_tie and not current_set.is_over:
+                if current_set.need_tie and not current_set.is_over:
                     score.current_game = Game(is_tie=True)
                 else:
                     score.current_game = Game()

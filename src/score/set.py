@@ -36,7 +36,7 @@ class Set:
         min_points_to_win = 6
         max_won_points = max(self.p1_points, self.p2_points)
         points_diff = max_won_points - min(self.p1_points, self.p2_points)
-        if self.need_tie and points_diff >= 2:
+        if self.need_tie and max_won_points == 7:
             return True
         if max_won_points >= min_points_to_win and points_diff >= 2:
             return True

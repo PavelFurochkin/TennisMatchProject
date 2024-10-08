@@ -27,7 +27,7 @@ class MatchScoreController(BaseController):
             self.response.body = body
             self.response.status = '404 Not Found'
         point_winner = self.__get_point_winner()
-        updated_match = ScoreUpdateService.update(match, point_winner)
+        updated_match = TennisDBService.update_db(match, point_winner)
         players_names = TennisDBService.get_players_name(updated_match.player1, updated_match.player2)
         match_param = ScoreUpdateService.show_match_params(updated_match)
         body = Render.render('match_score', **match_param, **players_names)
