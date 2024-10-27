@@ -9,7 +9,7 @@ class Render:
         'match_score': 'match_score.html',
         'match_not_found': 'match_not_found.html',
         'busy_player': 'busy_is_player.html',
-        # 'matches': 'matches.html',
+        'matches': 'matches.html',
     }
 
     env = Environment(

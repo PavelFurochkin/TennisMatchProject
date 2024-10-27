@@ -1,4 +1,5 @@
 from sqlalchemy import create_engine
+from sqlalchemy import func
 from sqlalchemy.orm import sessionmaker
 from src.db.db_model.models import Base, Player, Match
 from sqlalchemy import select, and_, or_
@@ -49,13 +50,13 @@ class TennisDBService:
         with session_factory() as session:
             TennisDBService.add_player(player1)
             TennisDBService.add_player(player2)
-            player1_in_game = session.query(Match.uuid).filter(
+            stmt = select(Match.uuid).where(
                 and_(
                     Match.player1 == TennisDBService.get_player_id_by_name(player1) or
                     Match.player2 == TennisDBService.get_player_id_by_name(player2),
                     Match.winner == None
-            ))
-            player_available = session.scalars(player1_in_game).first()
+                ))
+            player_available = session.execute(stmt).scalars().first()
             if player_available is None:
                 return True
             else:
@@ -85,7 +86,7 @@ class TennisDBService:
                 return result
             except TypeError:
                 raise MatchNotFoundByUUID("Match not found")
-                
+
     @classmethod
     def get_players_name(cls, player1_id, player2_id):
         with session_factory() as session:
@@ -95,3 +96,46 @@ class TennisDBService:
             name_list = result.fetchall()
             name_dict = {'player1_name': name_list[0][0], 'player2_name': name_list[1][0]}
             return name_dict
+
+    @classmethod
+    def get_all_players(cls):
+        with session_factory() as session:
+            player_names_list = [row[0] for row in
+                                 session.execute(select(Player.name).order_by(Player.name.asc())).fetchall()]
+        return player_names_list
+
+    @classmethod
+    def get_matches_count(cls, **kwargs):
+        with session_factory() as session:
+            filter_by_player_name = kwargs.get("filter_by_player_name")
+            query = select(func.count()).select_from(Match).distinct().join(
+                Player, or_(Player.id == Match.player1, Player.id == Match.player2))
+            if filter_by_player_name:
+                query = query.where(Player.name == filter_by_player_name)
+
+            result = session.execute(query).scalar()
+            return result
+
+    @classmethod
+    def paginate(cls, **kwargs):
+        with session_factory() as session:
+            # Основной запрос с JOIN и фильтром по имени игрока, если он передан
+            stmt = select(Match).distinct().join(Player, or_(Player.id == Match.player1, Player.id == Match.player2))
+
+            filter_by_player_name = kwargs.get('filter_by_player_name')
+            if filter_by_player_name:
+                stmt = stmt.where(Player.name == filter_by_player_name)
+
+            # Получаем page и page_size с значениями по умолчанию, если они отсутствуют
+            page = kwargs.get('page', 1)
+            page_size = kwargs.get('page_size', 10)
+
+            # Вычисляем offset
+            offset = (page - 1) * page_size
+            stmt = stmt.limit(page_size).offset(offset)
+
+            # Выполняем запрос и получаем результат в виде списка объектов Match
+            result = session.execute(stmt).fetchall()
+
+            return result
+        

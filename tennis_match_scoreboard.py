@@ -20,5 +20,5 @@ class WSGIapp(object):
 
 
 if __name__ == '__main__':
-    app = WhiteNoise(WSGIapp)
+    app = WhiteNoise(WSGIapp, f'View/static/')
     serve(app, host='0.0.0.0', port=8000)

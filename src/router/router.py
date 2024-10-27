@@ -1,6 +1,7 @@
 from src.controllers.start_new_match_controller import NewMatchController
 from src.controllers.match_score_controller import MatchScoreController
 from src.controllers.index_controller import IndexPageController
+from src.controllers.finished_matches_controller import FinishedMatchesController
 
 
 class Router:
@@ -8,7 +9,7 @@ class Router:
         '/': IndexPageController,
         '/new-match': NewMatchController,
         '/match-score': MatchScoreController,
-        # '/matches': matches_controller
+        '/matches': FinishedMatchesController
     }
 
     @classmethod

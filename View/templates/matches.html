@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head >
+        <meta lang="en">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="css/styles.css">
+    </head>
+
+    <body>
+
+        <div class="logo">
+            <p>
+                <b>Finished Matches</b>
+            </p>
+        </div>
+
+        <div class="container">
+            <form action="/matches" method="get" id="pagination_form">
+                    <label for="filter_by_player_name">Filter by player</label>
+                        <select name="filter_by_player_name" id="filter_by_player_name">
+                            <option value = "all"> --ALL-- </option>
+                                {% for player_name in player_names_list %}
+                                <option value="{{player_name}}">{{player_name}}</option>
+                                {% endfor %}
+                        </select>
+
+                    <label for="num_rows">Number of records per page</label>
+                        <select name="num_rows" id="num_rows">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                    <input type="submit" class="submit_button" value="Refresh">
+            </form>
+        </div>
+
+
+        <div class="container">
+            <button id="PrevButton" class="submit_button"> PREV </button>
+            <button id="NextButton" class="submit_button"> NEXT </button>
+
+            <a  href ="/">TO MAIN PAGE</a>
+
+            <table class="finishedmatchestable">
+                <tr class="match_row">
+
+                    <td>Player1</td>
+                    <td>Player2</td>
+
+                    <td>Set 1</td>
+                    <td>Set 2</td>
+                    <td>Set 3</td>
+
+                </tr>
+
+                {% for match in output %}
+                <tr>
+
+                    <td>{{match.player1}}
+                        {% if match.winner == match.player1 %}
+                            <img src = 'img/trophy.png' width="20" height="20">
+                        {%endif %}
+                    </td>
+                    <td>{{match.player2}}
+                        {% if match.winner == match.player2 %}
+                            <img src = 'img/trophy.png' width="20" height="20">
+                        {%endif %}
+                    </td>
+
+                    <td>{{match.set1_results}}</td>
+                    <td>{{match.set2_results}}</td>
+                    <td>{{match.set3_results}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+    <script src = "js/script.js">
+
+        </script>
+
+    </body>
+
+</html>
