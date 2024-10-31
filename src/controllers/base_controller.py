@@ -26,3 +26,4 @@ class BaseController(ABC):
     @abstractmethod
     def do_post(self):
         pass
+

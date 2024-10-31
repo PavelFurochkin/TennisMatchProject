@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from src.db.db_model.models import Base, Player, Match
 from sqlalchemy import select, and_, or_
 from src.uuid_generator import UUIDGenerator
-from exceptions import MatchNotFoundByUUID
+from exceptions import MatchNotFoundByUUID, OtherError
 from src.score import score, ScoreUpdateService
 
 engine = create_engine('sqlite+pysqlite:///src/db/tennis_db.db')
@@ -37,13 +37,19 @@ class TennisDBService:
 
     @staticmethod
     def add_player(name):
-        try:
-            with session_factory() as session:
+        if 3 > len(name) or len(name) > 20:
+            message = f"Имя должно быть от 3 до 20 символов."
+            raise OtherError(message)
+        with session_factory() as session:
+            stmt = select(Player).where(Player.name == name)
+            exiting_player = session.execute(stmt).scalar_one_or_none()
+
+            if exiting_player:
+                pass
+            else:
                 session.merge(Player(name=name))
                 session.commit()
                 print(f"Игрок {name} успешно добавлен")
-        except Exception as e:
-            print(f"Произошла ошибка при добавлении игрока {name}: {str(e)}")
 
     @staticmethod
     def checking_available_players(player1, player2):
