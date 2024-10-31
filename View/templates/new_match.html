@@ -5,28 +5,31 @@
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <title>Страница нового матча</title>
 </head>
-<body>
-    <div class="logo">
-        <p>Create New Match</p>
-    </div>
-    <div>
-        <form method="post" action="http://localhost:8000/new-match">
-            <div class="container">
-                <label for="player1">Введите имя первого игрока</label>
-                <input type="text" name="player1" required id="player1" placeholder="Ben Shelton">
-
-                <label for="player2">Введите имя второго игрока</label>
-                <input type="text" name="player2" required id="player2" placeholder="Rafael Nadal">
-            </div>
-            <div class="container">
-                <button type="submit">Начать матч</button>
-            </div>
-        </form>
-        <div class="container">
-            <form action="/" method="get">
-                <button type="submit">На главную</button>
-            </form>
+    <body>
+        <div class="logo">
+            <p>Create New Match</p>
         </div>
-    </div>
-</body>
+        <div>
+            <form id="newMatchForm" method="post" action="http://localhost:8000/new-match">
+                <div class="container">
+                    <label for="player1">Введите имя первого игрока</label>
+                    <input type="text" name="player1" required id="player1" placeholder="Ben Shelton">
+
+                    <label for="player2">Введите имя второго игрока</label>
+                    <input type="text" name="player2" required id="player2" placeholder="Rafael Nadal">
+                </div>
+                <div class="container">
+                    <button type="submit">Начать матч</button>
+                </div>
+            </form>
+            <div class="container">
+                <form action="/" method="get">
+                    <button type="submit">На главную</button>
+                </form>
+            </div>
+        </div>
+        <script src = "js/script.js">
+
+        </script>
+    </body>
 </html>

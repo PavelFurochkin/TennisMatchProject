@@ -1,3 +1,4 @@
+from exceptions import OtherError
 from src.controllers.base_controller import BaseController
 from View.jinja import Render
 from urllib.parse import parse_qs
@@ -10,16 +11,21 @@ class NewMatchController(BaseController):
         self.response.body = body
 
     def do_post(self):
-        player1, player2 = self.__parse_data_from_request()
-        redy_for_the_match = self.db_service.checking_available_players(player1, player2)
-        if redy_for_the_match is False:
-            body = Render.render('busy_player')
+        try:
+            player1, player2 = self.__parse_data_from_request()
+            redy_for_the_match = self.db_service.checking_available_players(player1, player2)
+            if redy_for_the_match is False:
+                body = Render.render('busy_player')
+                self.response.body = body
+                self.response.status = "400"
+                return
+            match = self.db_service.add_match(player1, player2)
+            self.response.status = '303 See Other'
+            self.response.headers = [('Location', f'/match-score?uuid={match.uuid}')]
+        except OtherError as exc:
+            body = Render.render('match_not_found', error_message=exc.message)
             self.response.body = body
-            self.response.status = "400"
-            return
-        match = self.db_service.add_match(player1, player2)
-        self.response.status = '303 See Other'
-        self.response.headers = [('Location', f'/match-score?uuid={match.uuid}')]
+            self.response.status = '400 Bad Request'
 
     def __parse_data_from_request(self):
         request_data = self.environ['wsgi.input'].read().decode('utf-8')
