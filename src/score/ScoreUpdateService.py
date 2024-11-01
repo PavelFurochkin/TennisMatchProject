@@ -74,7 +74,7 @@ class ScoreUpdateService:
             if set_.winner == 1:
                 p1_won_sets += 1
             else:
-                p1_won_sets += 1
+                p2_won_sets += 1
         if p1_won_sets > p2_won_sets:
             match_winner = 1
         else:
