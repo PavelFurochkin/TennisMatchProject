@@ -53,6 +53,8 @@ class TennisDBService:
 
     @staticmethod
     def checking_available_players(player1, player2):
+        if player1 == player2:
+            raise OtherError('Игрок не может играть сам с собой.')
         with session_factory() as session:
             TennisDBService.add_player(player1)
             TennisDBService.add_player(player2)
