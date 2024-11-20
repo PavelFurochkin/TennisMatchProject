@@ -1,5 +1,5 @@
 from jinja2 import Environment, PackageLoader, select_autoescape
-from View.templates.game_score_convector import GameScoreConvector
+from src.controllers.game_score_convector import GameScoreConvector
 
 
 class Render:
@@ -7,7 +7,7 @@ class Render:
         'index': 'index.html',
         'new_match': 'new_match.html',
         'match_score': 'match_score.html',
-        'match_not_found': 'match_not_found.html',
+        'error_page': 'error_page.html',
         'busy_player': 'busy_is_player.html',
         'matches': 'matches.html',
     }

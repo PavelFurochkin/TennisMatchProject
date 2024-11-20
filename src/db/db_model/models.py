@@ -1,7 +1,7 @@
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import String, ForeignKey, event
 
-from exceptions import OtherError
+from exceptions import  InvalidUserNameError
 
 
 class Base(DeclarativeBase):
@@ -20,7 +20,7 @@ class Player(Base):
         if target.name:
             target.name = target.name.strip()
             if target.name == "":
-                raise OtherError("Имя не может состоять только из пробелов.")
+                raise InvalidUserNameError()
 
 
 # Привязываем обработчик к событию "before_insert" и "before_update"

@@ -1,7 +1,8 @@
-from exceptions import OtherError
+from exceptions import  TennisScoreboardError
 from src.controllers.base_controller import BaseController
-from View.jinja import Render
+from src.render.renderer import Render
 from urllib.parse import parse_qs
+from src.db.DAO.DAO import TennisDAO
 
 
 class NewMatchController(BaseController):
@@ -13,7 +14,7 @@ class NewMatchController(BaseController):
     def do_post(self):
         try:
             player1, player2 = self.__parse_data_from_request()
-            redy_for_the_match = self.db_service.checking_available_players(player1, player2)
+            redy_for_the_match = TennisDAO.checking_available_players(player1, player2)
             if redy_for_the_match is False:
                 body = Render.render('busy_player')
                 self.response.body = body
@@ -22,8 +23,8 @@ class NewMatchController(BaseController):
             match = self.db_service.add_match(player1, player2)
             self.response.status = '303 See Other'
             self.response.headers = [('Location', f'/match-score?uuid={match.uuid}')]
-        except OtherError as exc:
-            body = Render.render('match_not_found', error_message=exc.message)
+        except TennisScoreboardError as e:
+            body = Render.render('error_page', exception=e.message)
             self.response.body = body
             self.response.status = '400 Bad Request'
 
@@ -33,5 +34,4 @@ class NewMatchController(BaseController):
         player1_name = service_data['player1'][0]
         player2_name = service_data['player2'][0]
         return player1_name, player2_name
-
 

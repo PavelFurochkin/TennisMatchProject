@@ -2,14 +2,15 @@ from src.controllers.base_controller import BaseController
 from urllib.parse import parse_qs
 from src.db.db_service.db_service import TennisDBService
 from src.score.score import ScoreSchema
-from View.jinja import Render
-from exceptions import OtherError
+from src.render.renderer import Render
+from exceptions import TennisScoreboardError
+from src.db.DAO.DAO import TennisDAO
 
 
 class FinishedMatchesController(BaseController):
     def do_get(self):
         try:
-            player_names_list = TennisDBService.get_all_players()
+            player_names_list = TennisDAO.get_all_players()
             filter_by_player_name = self.get_player_name()
             page_size = self.get_num_rows()
             page_number = self.get_page_number()
@@ -19,8 +20,8 @@ class FinishedMatchesController(BaseController):
             output = MatchRecordsService.process(records)
             body = Render.render('matches', output=output, player_names_list=player_names_list)
             self.response.body = body
-        except OtherError as exc:
-            body = Render.render('match_not_found', error_message=exc.message)
+        except TennisScoreboardError as e:
+            body = Render.render('error_page', exception=e.message)
             self.response.body = body
             self.response.status = '400 Bad Request'
 
@@ -67,7 +68,7 @@ class MatchRecordsService:
         for record in records:
             match = record[0]
             score = ScoreSchema().loads(match.score)
-            player_names = TennisDBService.get_players_name(match.player1, match.player2)
+            player_names = TennisDAO.get_players_name(match.player1, match.player2)
             player1, player2 = player_names['player1_name'], player_names['player2_name']
             num_sets = len(score.sets)
             if match.winner is not None:

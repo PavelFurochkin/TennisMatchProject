@@ -1,5 +1,5 @@
 from src.controllers.base_controller import BaseController
-from View.jinja import Render
+from src.render.renderer import Render
 
 
 class IndexPageController(BaseController):
